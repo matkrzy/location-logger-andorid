@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * A fragment representing a list of Items.
@@ -23,7 +27,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class RouteFragment extends Fragment {
+public class DeviceFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -31,19 +35,19 @@ public class RouteFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    public static final List<Routes> ITEMS = new ArrayList<>();
+    public static final List<Devices> ITEMS = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RouteFragment() {
+    public DeviceFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static RouteFragment newInstance(int columnCount, String queryResult) {
-        RouteFragment fragment = new RouteFragment();
+    public static DeviceFragment newInstance(int columnCount, String queryResult) {
+        DeviceFragment fragment = new DeviceFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -60,21 +64,24 @@ public class RouteFragment extends Fragment {
                 JSONArray jsonArray = new JSONArray(queryResult);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Routes tmpRoutes = new Routes(jsonObject.getString("id"), jsonObject.getString("name"));
-                    ITEMS.add(tmpRoutes);
+                    Devices tmpDevices = new Devices(jsonObject.getString("id"), jsonObject.getString("name"), jsonObject.getString("uuid"), jsonObject.getString("removed"));
+                    ITEMS.add(tmpDevices);
                 }
             }
             else
             {
                 JSONObject jsonObject = new JSONObject(queryResult);
-                Routes tmpRoutes = new Routes(jsonObject.getString("id"), jsonObject.getString("name"));
-                ITEMS.add(tmpRoutes);
+                Devices tmpDevices = new Devices(jsonObject.getString("id"), jsonObject.getString("name"), jsonObject.getString("uuid"), jsonObject.getString("removed"));
+                ITEMS.add(tmpDevices);
             }
         }
         catch(Exception e)
         {
+
         }
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +95,7 @@ public class RouteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_device_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -99,8 +106,7 @@ public class RouteFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(ITEMS, mListener));
-
+            recyclerView.setAdapter(new MyDeviceRecyclerViewAdapter(ITEMS, mListener));
         }
         return view;
     }
@@ -135,6 +141,8 @@ public class RouteFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Routes item);
+        void onListFragmentInteraction(Devices item);
     }
+
+
 }

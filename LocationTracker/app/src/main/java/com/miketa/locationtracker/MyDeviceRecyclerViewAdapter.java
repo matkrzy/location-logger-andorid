@@ -1,27 +1,29 @@
 package com.miketa.locationtracker;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.miketa.locationtracker.RouteFragment.OnListFragmentInteractionListener;
-
+import com.miketa.locationtracker.DeviceFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Routes} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Devices} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Routes> mValues;
+    private final List<Devices> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<Routes> items, OnListFragmentInteractionListener listener) {
+    public MyDeviceRecyclerViewAdapter(List<Devices> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -29,7 +31,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.fragment_device, parent, false);
         return new ViewHolder(view);
     }
 
@@ -37,7 +39,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mContentView.setText(mValues.get(position).name);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +51,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                 }
             }
         });
+
+        holder.mDeleteButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                    public void onClick(View v) {
+                UserTask mUserTask = new UserTask(3, 0, holder.mDeleteButton.getContext(), 0);
+                mUserTask.execute((Void) null);
+            }
+        });
+
     }
 
 
@@ -61,13 +72,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public Routes mItem;
+        public final Button mDeleteButton;
+        public Devices mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mDeleteButton = (Button) view.findViewById(R.id.button);
         }
 
         @Override
